@@ -1,7 +1,7 @@
 package com.nikita.linkservice.service;
 
-import com.nikita.linkservice.model.dto.LinkRequest;
-import com.nikita.linkservice.model.dto.LinkResponse;
+import com.nikita.linkservice.mapper.LinkMapper;
+import com.nikita.linkservice.model.dto.*;
 import com.nikita.linkservice.model.entity.LinkEntity;
 import com.nikita.linkservice.repository.LinkRepository;
 import org.springframework.http.ResponseEntity;
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.net.URI;
-import java.util.UUID;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -17,9 +17,11 @@ import java.util.regex.Pattern;
 public class LinkService {
 
     private final LinkRepository linkRepository;
+    private final LinkMapper linkMapper;
 
-    public LinkService(LinkRepository linkRepository) {
+    public LinkService(LinkRepository linkRepository, LinkMapper linkMapper) {
         this.linkRepository = linkRepository;
+        this.linkMapper = linkMapper;
     }
 
     @Transactional
@@ -63,5 +65,25 @@ public class LinkService {
         return ResponseEntity.status(302)
                 .location(URI.create(entity.getOriginal()))
                 .build();
+    }
+
+    @Transactional(readOnly = true)
+    public ResponseEntity<List<LinkDto>> getStats() {
+        List<LinkEntity> entities = linkRepository.findAllOrderByCountDesc();
+        List<LinkDto> dtos = new ArrayList<>(entities.size());
+        for (int i = 0; i < entities.size(); i++) {
+            LinkEntity entity = entities.get(i);
+            LinkDto dto = linkMapper.toDto(entity);
+            dto.setRank(i + 1L);
+            dtos.add(dto);
+        }
+        return ResponseEntity.ok(dtos);
+    }
+
+    @Transactional(readOnly = true)
+    public ResponseEntity<LinkDto> getStat(String shortLink) {
+        String link = "/l/" + shortLink;
+        Map<String, Object> linkWithStatsByShortLink = linkRepository.findLinkWithStatsByShortLink(link);
+        return null;
     }
 }
