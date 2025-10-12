@@ -15,7 +15,8 @@ import java.util.UUID;
 public class LinkEntity {
 
     @Id
-    @Column(name = "link_id")
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "link_id", columnDefinition = "uuid default gen_random_uuid()")
     private UUID linkId;
 
     @Column(unique = true, nullable = false)

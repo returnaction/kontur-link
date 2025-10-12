@@ -4,14 +4,13 @@ import com.nikita.linkservice.mapper.LinkMapper;
 import com.nikita.linkservice.model.dto.*;
 import com.nikita.linkservice.model.entity.LinkEntity;
 import com.nikita.linkservice.repository.LinkRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.net.URI;
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Service
 public class LinkService {
@@ -26,39 +25,41 @@ public class LinkService {
 
     @Transactional
     public ResponseEntity<LinkResponse> generate(LinkRequest request) {
-        String original = request.getOriginal();
-        String shortLink = shortLinkGenerator(original);
-
         LinkEntity entity = LinkEntity.builder()
-                .linkId(UUID.randomUUID())
-                .original(original.toString())
-                .link(shortLink)
+                .original(request.getOriginal())
+                .link(shortLinkGenerator())
                 .build();
 
         entity = linkRepository.save(entity);
 
         LinkResponse response = LinkResponse.builder()
-                .link(entity.getLink())
+                .link("/l/" + entity.getLink())
                 .build();
 
         return ResponseEntity.ok(response);
     }
 
-    private String shortLinkGenerator(String link) {
-        StringBuilder result = new StringBuilder();
-        result.append("/l/");
+    private String shortLinkGenerator() {
+        int leftLimit = 97;
+        int rightLimit = 122;
+        int targetStringLength = 10;
+        Random random = new Random();
+        StringBuilder buffer = new StringBuilder(targetStringLength);
 
-        Matcher matcher = Pattern.compile("https?://([^/]+)").matcher(link);
-        if (matcher.find()) {
-            result.append(matcher.group(1));
+        for (int i = 0; i < targetStringLength; i++) {
+            int randomLimitedInt = leftLimit + (int) (random.nextFloat() * (rightLimit - leftLimit + 1));
+            buffer.append((char) randomLimitedInt);
         }
-        return result.toString();
+
+        String generatedString = buffer.toString();
+        System.out.println(">>>>> Generated Link: " + generatedString);
+        return generatedString;
     }
 
     @Transactional
     public ResponseEntity<Void> redirect(String shortLink) {
-        LinkEntity entity = linkRepository.findByLink("/l/" + shortLink).orElseThrow(() -> new RuntimeException("Ссылка не найдена"));
-
+        LinkEntity entity = linkRepository.findByLink(shortLink).orElseThrow(() -> new RuntimeException("Ссылка не найдена"));
+        //TODO сделать на уровне бд (тригер)
         entity.setCount(entity.getCount() + 1);
         linkRepository.save(entity);
 
@@ -67,23 +68,31 @@ public class LinkService {
                 .build();
     }
 
+//TODO сделать маппер для Map<String, Object> to LinkDTO или c
     @Transactional(readOnly = true)
     public ResponseEntity<List<LinkDto>> getStats() {
-        List<LinkEntity> entities = linkRepository.findAllOrderByCountDesc();
-        List<LinkDto> dtos = new ArrayList<>(entities.size());
-        for (int i = 0; i < entities.size(); i++) {
-            LinkEntity entity = entities.get(i);
-            LinkDto dto = linkMapper.toDto(entity);
-            dto.setRank(i + 1L);
-            dtos.add(dto);
-        }
-        return ResponseEntity.ok(dtos);
+        List<Map<String, Object>> rawLinks = linkRepository.findAllLinksWithStatsOrderByCountDesc();
+        List<LinkDto> dtoLinks = rawLinks.stream()
+                .map(raw -> LinkDto.builder()
+                        .link(raw.get("link").toString())
+                        .original(raw.get("original").toString())
+                        .count((long) raw.get("count"))
+                        .rank((long) raw.get("rank"))
+                        .build())
+                .toList();
+        return ResponseEntity.ok(dtoLinks);
     }
 
     @Transactional(readOnly = true)
     public ResponseEntity<LinkDto> getStat(String shortLink) {
-        String link = "/l/" + shortLink;
-        Map<String, Object> linkWithStatsByShortLink = linkRepository.findLinkWithStatsByShortLink(link);
-        return null;
+        Map<String, Object> linkWithStatsByShortLink = linkRepository.findLinkWithStatsByShortLink(shortLink);
+        LinkDto build = LinkDto.builder()
+                .link(linkWithStatsByShortLink.get("link").toString())
+                .original(linkWithStatsByShortLink.get("original").toString())
+                .count((long) linkWithStatsByShortLink.get("count"))
+                .rank((long) linkWithStatsByShortLink.get("rank"))
+                .build();
+
+        return new ResponseEntity<>(build, HttpStatus.OK);
     }
 }
