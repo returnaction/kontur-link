@@ -1,0 +1,14 @@
+databaseChangeLog:
+  - changeSet:
+      id: 5
+      author: nikita
+      changes:
+        - sql:
+            sql: |
+              --  поиск по короткой ссылке
+              CREATE INDEX IF NOT EXISTS idx_links_link
+              ON links(link);
+
+              -- сортировки по количеству переходов
+              CREATE INDEX IF NOT EXISTS idx_links_count
+              ON links(count);

@@ -1,0 +1,28 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2
+      author: nikita
+      changes:
+        - createTable:
+            tableName: links
+            columns:
+              - column:
+                  name: link_id
+                  type: uuid
+                  defaultValueComputed: gen_random_uuid()
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: original
+                  type: text
+                  constraints:
+                    nullable: false
+              - column:
+                  name: link
+                  type: varchar
+                  constraints:
+                    nullable: false
+              - column:
+                  name: count
+                  type: bigint
+                  defaultValueNumeric: 0

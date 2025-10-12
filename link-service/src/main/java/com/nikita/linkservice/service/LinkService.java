@@ -6,6 +6,7 @@ import com.nikita.linkservice.model.entity.LinkEntity;
 import com.nikita.linkservice.repository.LinkRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,10 +18,13 @@ public class LinkService {
 
     private final LinkRepository linkRepository;
     private final LinkMapper linkMapper;
+    private final JdbcTemplate jdbcTemplate;
 
-    public LinkService(LinkRepository linkRepository, LinkMapper linkMapper) {
+
+    public LinkService(LinkRepository linkRepository, LinkMapper linkMapper, JdbcTemplate jdbcTemplate) {
         this.linkRepository = linkRepository;
         this.linkMapper = linkMapper;
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     @Transactional
@@ -58,12 +62,13 @@ public class LinkService {
 
     @Transactional
     public ResponseEntity<Void> redirect(String shortLink) {
-        LinkEntity entity = linkRepository.findByLink(shortLink).orElseThrow(() -> new RuntimeException("Ссылка не найдена"));
-        //TODO сделать на уровне бд (тригер)
-        entity.setCount(entity.getCount() + 1);
-        linkRepository.save(entity);
+        // Увеличиваем счётчик переходов на уровне бд
+        jdbcTemplate.update("SELECT increment_count(?)", shortLink);
 
-        return ResponseEntity.status(302)
+        LinkEntity entity = linkRepository.findByLink(shortLink).orElseThrow(() -> new RuntimeException("Ссылка не найдена"));
+
+        return ResponseEntity
+                .status(302)
                 .location(URI.create(entity.getOriginal()))
                 .build();
     }

@@ -1,0 +1,43 @@
+databaseChangeLog:
+  - changeSet:
+      id: 3
+      author: nikita
+      changes:
+        - insert:
+            tableName: links
+            columns:
+              - column:
+                  name: original
+                  value: 'https://google.com/search?q=liquibase'
+              - column:
+                  name: link
+                  value: 'hcdfezovau'
+              - column:
+                  name: count
+                  valueNumeric: 10
+
+        - insert:
+            tableName: links
+            columns:
+              - column:
+                  name: original
+                  value: 'https://stackoverflow.com/questions/ask'
+              - column:
+                  name: link
+                  value: 'zcpdezovau'
+              - column:
+                  name: count
+                  valueNumeric: 25
+
+        - insert:
+            tableName: links
+            columns:
+              - column:
+                  name: original
+                  value: 'https://github.com/trending/java'
+              - column:
+                  name: link
+                  value: 'jkpdezovau'
+              - column:
+                  name: count
+                  valueNumeric: 15

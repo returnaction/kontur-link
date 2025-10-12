@@ -1,6 +1,7 @@
 package com.nikita.linkservice.model.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.util.UUID;
@@ -20,9 +21,10 @@ public class LinkEntity {
     private UUID linkId;
 
     @Column(unique = true, nullable = false)
+    @Size(max = 8192)
     private String original;
 
-    @Column(unique = true, nullable = false)
+    @Column(unique = true, nullable = false, updatable = false)
     private String link;
 
     private Long count;

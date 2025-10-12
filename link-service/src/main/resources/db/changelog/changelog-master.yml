@@ -1,0 +1,11 @@
+databaseChangeLog:
+  - include:
+      file: db/changelog/v1_init_pgcrypto.yml
+  - include:
+      file: db/changelog/v2_create_links_table.yml
+  - include:
+      file: db/changelog/v3_insert_initial_data.yml
+  - include:
+      file: db/changelog/v4_add_trigger_increment_count.yml
+  - include:
+      file: db/changelog/v5_add_indexes_to_links_table.yml

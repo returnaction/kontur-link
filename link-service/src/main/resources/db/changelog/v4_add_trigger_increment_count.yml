@@ -1,0 +1,16 @@
+databaseChangeLog:
+  - changeSet:
+      id: 4
+      author: nikita
+      changes:
+        - sql:
+            sql: |
+              -- функция для увеличения счётчика при переходе
+              CREATE OR REPLACE FUNCTION increment_count(p_link TEXT)
+              RETURNS VOID AS $$
+              BEGIN
+                UPDATE links
+                SET count = count + 1
+                WHERE link = p_link;
+              END;
+              $$ LANGUAGE plpgsql;
