@@ -12,17 +12,25 @@ databaseChangeLog:
                   defaultValueComputed: gen_random_uuid()
                   constraints:
                     primaryKey: true
+                    nullable: false
+
               - column:
                   name: original
                   type: text
                   constraints:
                     nullable: false
+                    unique: true
+
               - column:
                   name: link
-                  type: varchar
+                  type: varchar(255)
                   constraints:
                     nullable: false
+                    unique: true
+
               - column:
                   name: count
                   type: bigint
                   defaultValueNumeric: 0
+                  constraints:
+                    nullable: false

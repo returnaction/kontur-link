@@ -16,22 +16,15 @@ import java.util.UUID;
 public class LinkEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "link_id", columnDefinition = "uuid default gen_random_uuid()")
+    @Column(name = "link_id")
     private UUID linkId;
 
-    @Column(unique = true, nullable = false)
     @Size(max = 8192)
     private String original;
 
-    @Column(unique = true, nullable = false, updatable = false)
+    @Column(updatable = false)
     private String link;
 
     private Long count;
-
-    @PrePersist
-    public void prePersist(){
-        if(count == null) count = 0L;
-    }
 
 }
