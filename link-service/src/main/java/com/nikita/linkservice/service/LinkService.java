@@ -13,10 +13,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.net.URI;
-import java.util.Random;
+import java.security.SecureRandom;
 
 @Service
 public class LinkService {
+
+    private static final String ALPHABET = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    private static final int TOKEN_LEN = 10;
+    private static final int MAX_RETRIES = 5;
+    private static final SecureRandom RNG = new SecureRandom();
 
     private final LinkRepository linkRepository;
     private final LinkMapper linkMapper;
@@ -28,31 +33,23 @@ public class LinkService {
 
     @Transactional
     public ResponseEntity<LinkResponse> generate(LinkRequest request) {
+        String token = generateToken(TOKEN_LEN);
         LinkEntity entity = LinkEntity.builder()
                 .original(request.getOriginal())
-                .link(shortLinkGenerator())
-                .count(0L) // TODO вынести в БД default = 0f
+                .link(token)
+                .count(0L)
                 .build();
-
         entity = linkRepository.save(entity);
         return ResponseEntity.ok(new LinkResponse("/l/" + entity.getLink()));
     }
 
-    private String shortLinkGenerator() {
-        int leftLimit = 97;
-        int rightLimit = 122;
-        int targetStringLength = 10;
-        Random random = new Random();
-        StringBuilder buffer = new StringBuilder(targetStringLength);
-
-        for (int i = 0; i < targetStringLength; i++) {
-            int randomLimitedInt = leftLimit + (int) (random.nextFloat() * (rightLimit - leftLimit + 1));
-            buffer.append((char) randomLimitedInt);
+    private String generateToken(int length) {
+        StringBuilder sb = new StringBuilder(length);
+        for (int i = 0; i < length; i++) {
+            int index = RNG.nextInt(ALPHABET.length());
+            sb.append(ALPHABET.charAt(index));
         }
-
-        String generatedString = buffer.toString();
-        System.out.println(">>>>> Generated Link: " + generatedString);
-        return generatedString;
+        return sb.toString();
     }
 
     @Transactional
