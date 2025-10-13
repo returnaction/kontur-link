@@ -49,4 +49,6 @@ public interface LinkRepository extends JpaRepository<LinkEntity, UUID> {
             WHERE l.link = :link
             """, nativeQuery = true)
     Optional<LinkStatsView> findStatsByLink(@Param("link") String link);
+
+    Optional<LinkEntity> findByOriginal(String original);
 }

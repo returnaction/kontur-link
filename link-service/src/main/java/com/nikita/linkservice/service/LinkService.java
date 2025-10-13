@@ -14,13 +14,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.net.URI;
 import java.security.SecureRandom;
+import java.util.Optional;
 
 @Service
 public class LinkService {
 
     private static final String ALPHABET = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
     private static final int TOKEN_LEN = 10;
-    private static final int MAX_RETRIES = 5;
     private static final SecureRandom RNG = new SecureRandom();
 
     private final LinkRepository linkRepository;
@@ -33,7 +33,13 @@ public class LinkService {
 
     @Transactional
     public ResponseEntity<LinkResponse> generate(LinkRequest request) {
-        String token = generateToken(TOKEN_LEN);
+
+        Optional<LinkEntity> existing = linkRepository.findByOriginal(request.getOriginal());
+        if (existing.isPresent()) {
+            return ResponseEntity.ok(new LinkResponse("/l/" + existing.get().getLink()));
+        }
+
+        String token = generateToken();
         LinkEntity entity = LinkEntity.builder()
                 .original(request.getOriginal())
                 .link(token)
@@ -43,9 +49,9 @@ public class LinkService {
         return ResponseEntity.ok(new LinkResponse("/l/" + entity.getLink()));
     }
 
-    private String generateToken(int length) {
-        StringBuilder sb = new StringBuilder(length);
-        for (int i = 0; i < length; i++) {
+    private String generateToken() {
+        StringBuilder sb = new StringBuilder(LinkService.TOKEN_LEN);
+        for (int i = 0; i < LinkService.TOKEN_LEN; i++) {
             int index = RNG.nextInt(ALPHABET.length());
             sb.append(ALPHABET.charAt(index));
         }
