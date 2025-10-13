@@ -6,38 +6,216 @@ databaseChangeLog:
         - insert:
             tableName: links
             columns:
-              - column:
-                  name: original
-                  value: 'https://google.com/search?q=liquibase'
-              - column:
-                  name: link
-                  value: 'hcdfezovau'
-              - column:
-                  name: count
-                  valueNumeric: 10
+              - column: { name: original, value: 'https://www.google.com/' }
+              - column: { name: link,     value: 'qvmdrtaeup' }
+              - column: { name: count,    valueNumeric: 12 }
 
         - insert:
             tableName: links
             columns:
-              - column:
-                  name: original
-                  value: 'https://stackoverflow.com/questions/ask'
-              - column:
-                  name: link
-                  value: 'zcpdezovau'
-              - column:
-                  name: count
-                  valueNumeric: 25
+              - column: { name: original, value: 'https://www.youtube.com/' }
+              - column: { name: link,     value: 'hzgtnpward' }
+              - column: { name: count,    valueNumeric: 34 }
 
         - insert:
             tableName: links
             columns:
-              - column:
-                  name: original
-                  value: 'https://github.com/trending/java'
-              - column:
-                  name: link
-                  value: 'jkpdezovau'
-              - column:
-                  name: count
-                  valueNumeric: 15
+              - column: { name: original, value: 'https://en.wikipedia.org/wiki/Main_Page' }
+              - column: { name: link,     value: 'mktasrlpov' }
+              - column: { name: count,    valueNumeric: 18 }
+
+        - insert:
+            tableName: links
+            columns:
+              - column: { name: original, value: 'https://stackoverflow.com/questions' }
+              - column: { name: link,     value: 'bjxqmravte' }
+              - column: { name: count,    valueNumeric: 27 }
+
+        - insert:
+            tableName: links
+            columns:
+              - column: { name: original, value: 'https://github.com/trending' }
+              - column: { name: link,     value: 'snqveutplk' }
+              - column: { name: count,    valueNumeric: 21 }
+
+        - insert:
+            tableName: links
+            columns:
+              - column: { name: original, value: 'https://news.ycombinator.com/' }
+              - column: { name: link,     value: 'wcfqzptlna' }
+              - column: { name: count,    valueNumeric: 16 }
+
+        - insert:
+            tableName: links
+            columns:
+              - column: { name: original, value: 'https://reddit.com/r/programming' }
+              - column: { name: link,     value: 'lpzvndqtre' }
+              - column: { name: count,    valueNumeric: 19 }
+
+        - insert:
+            tableName: links
+            columns:
+              - column: { name: original, value: 'https://x.com/' }
+              - column: { name: link,     value: 'tkrwepmajz' }
+              - column: { name: count,    valueNumeric: 8 }
+
+        - insert:
+            tableName: links
+            columns:
+              - column: { name: original, value: 'https://www.linkedin.com/' }
+              - column: { name: link,     value: 'gmrptvakwe' }
+              - column: { name: count,    valueNumeric: 11 }
+
+        - insert:
+            tableName: links
+            columns:
+              - column: { name: original, value: 'https://www.facebook.com/' }
+              - column: { name: link,     value: 'vdqtrplmwa' }
+              - column: { name: count,    valueNumeric: 9 }
+
+        - insert:
+            tableName: links
+            columns:
+              - column: { name: original, value: 'https://www.amazon.com/' }
+              - column: { name: link,     value: 'czmwrplqta' }
+              - column: { name: count,    valueNumeric: 7 }
+
+        - insert:
+            tableName: links
+            columns:
+              - column: { name: original, value: 'https://www.apple.com/' }
+              - column: { name: link,     value: 'nxqavtrplm' }
+              - column: { name: count,    valueNumeric: 5 }
+
+        - insert:
+            tableName: links
+            columns:
+              - column: { name: original, value: 'https://www.microsoft.com/' }
+              - column: { name: link,     value: 'rqpmvalkzt' }
+              - column: { name: count,    valueNumeric: 6 }
+
+        - insert:
+            tableName: links
+            columns:
+              - column: { name: original, value: 'https://spring.io/projects/spring-boot' }
+              - column: { name: link,     value: 'akmtevrplq' }
+              - column: { name: count,    valueNumeric: 25 }
+
+        - insert:
+            tableName: links
+            columns:
+              - column: { name: original, value: 'https://baeldung.com/spring-boot' }
+              - column: { name: link,     value: 'plqtmrvaze' }
+              - column: { name: count,    valueNumeric: 13 }
+
+        - insert:
+            tableName: links
+            columns:
+              - column: { name: original, value: 'https://habr.com/ru/all/' }
+              - column: { name: link,     value: 'zqtmrvalwp' }
+              - column: { name: count,    valueNumeric: 14 }
+
+        - insert:
+            tableName: links
+            columns:
+              - column: { name: original, value: 'https://www.yandex.ru/' }
+              - column: { name: link,     value: 'jvtmqrplae' }
+              - column: { name: count,    valueNumeric: 10 }
+
+        - insert:
+            tableName: links
+            columns:
+              - column: { name: original, value: 'https://www.cnn.com/' }
+              - column: { name: link,     value: 'kqtmvralpz' }
+              - column: { name: count,    valueNumeric: 4 }
+
+        - insert:
+            tableName: links
+            columns:
+              - column: { name: original, value: 'https://www.bbc.com/' }
+              - column: { name: link,     value: 'lmqztvarpe' }
+              - column: { name: count,    valueNumeric: 4 }
+
+        - insert:
+            tableName: links
+            columns:
+              - column: { name: original, value: 'https://medium.com/' }
+              - column: { name: link,     value: 'ytnqmrplva' }
+              - column: { name: count,    valueNumeric: 9 }
+
+        - insert:
+            tableName: links
+            columns:
+              - column: { name: original, value: 'https://dev.to/' }
+              - column: { name: link,     value: 'bqtrplamve' }
+              - column: { name: count,    valueNumeric: 6 }
+
+        - insert:
+            tableName: links
+            columns:
+              - column: { name: original, value: 'https://www.docker.com/' }
+              - column: { name: link,     value: 'mvqatlprze' }
+              - column: { name: count,    valueNumeric: 11 }
+
+        - insert:
+            tableName: links
+            columns:
+              - column: { name: original, value: 'https://kubernetes.io/' }
+              - column: { name: link,     value: 'trqplamvez' }
+              - column: { name: count,    valueNumeric: 8 }
+
+        - insert:
+            tableName: links
+            columns:
+              - column: { name: original, value: 'https://www.postgresql.org/docs/' }
+              - column: { name: link,     value: 'nvqtralpme' }
+              - column: { name: count,    valueNumeric: 17 }
+
+        - insert:
+            tableName: links
+            columns:
+              - column: { name: original, value: 'https://docs.liquibase.com/' }
+              - column: { name: link,     value: 'paqrmvltze' }
+              - column: { name: count,    valueNumeric: 15 }
+
+        - insert:
+            tableName: links
+            columns:
+              - column: { name: original, value: 'https://search.maven.org/' }
+              - column: { name: link,     value: 'vlqaztmrpe' }
+              - column: { name: count,    valueNumeric: 5 }
+
+        - insert:
+            tableName: links
+            columns:
+              - column: { name: original, value: 'https://tomcat.apache.org/' }
+              - column: { name: link,     value: 'crplqvaztm' }
+              - column: { name: count,    valueNumeric: 3 }
+
+        - insert:
+            tableName: links
+            columns:
+              - column: { name: original, value: 'https://kotlinlang.org/' }
+              - column: { name: link,     value: 'rplqtmvaze' }
+              - column: { name: count,    valueNumeric: 7 }
+
+        - insert:
+            tableName: links
+            columns:
+              - column: { name: original, value: 'https://openjdk.org/' }
+              - column: { name: link,     value: 'zmltqvarpe' }
+              - column: { name: count,    valueNumeric: 6 }
+
+        - insert:
+            tableName: links
+            columns:
+              - column: { name: original, value: 'https://start.spring.io/' }
+              - column: { name: link,     value: 'qtramvzlep' }
+              - column: { name: count,    valueNumeric: 20 }
+
+        - insert:
+            tableName: links
+            columns:
+              - column: { name: original, value: 'https://serverfault.com/' }
+              - column: { name: link,     value: 'tmravplqze' }
+              - column: { name: count,    valueNumeric: 4 }

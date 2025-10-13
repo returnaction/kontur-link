@@ -28,5 +28,4 @@ public class LinkEntity {
     private String link;
 
     private Long count;
-
 }
