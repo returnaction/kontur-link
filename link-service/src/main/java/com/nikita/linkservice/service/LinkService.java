@@ -32,6 +32,7 @@ public class LinkService {
         LinkEntity entity = LinkEntity.builder()
                 .original(request.getOriginal())
                 .link(shortLinkGenerator())
+                .count(0L)
                 .build();
 
         entity = linkRepository.save(entity);
@@ -62,18 +63,25 @@ public class LinkService {
 
     @Transactional
     public ResponseEntity<Void> redirect(String shortLink) {
-        // Увеличиваем счётчик переходов на уровне бд
-        jdbcTemplate.update("SELECT increment_count(?)", shortLink);
+        String original = jdbcTemplate.queryForObject(
+                "UPDATE links SET count = count + 1 " +
+                        "WHERE link = ? " +
+                        "RETURNING original",
+                String.class,
+                shortLink
+        );
 
-        LinkEntity entity = linkRepository.findByLink(shortLink).orElseThrow(() -> new RuntimeException("Ссылка не найдена"));
+        if (original == null) {
+            throw new RuntimeException("Ссылка не найдена");
+        }
 
         return ResponseEntity
                 .status(302)
-                .location(URI.create(entity.getOriginal()))
+                .location(URI.create(original))
                 .build();
     }
 
-//TODO сделать маппер для Map<String, Object> to LinkDTO или c
+    //TODO сделать маппер для Map<String, Object> to LinkDTO или c
     @Transactional(readOnly = true)
     public ResponseEntity<List<LinkDto>> getStats() {
         List<Map<String, Object>> rawLinks = linkRepository.findAllLinksWithStatsOrderByCountDesc();

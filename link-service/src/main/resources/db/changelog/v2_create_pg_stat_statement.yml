@@ -1,0 +1,7 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2
+      author: nikita
+      changes:
+        - sql:
+            sql: CREATE EXTENSION IF NOT EXISTS pg_stat_statements;

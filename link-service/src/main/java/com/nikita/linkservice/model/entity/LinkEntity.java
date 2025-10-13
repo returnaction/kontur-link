@@ -17,6 +17,7 @@ import java.util.UUID;
 public class LinkEntity {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "link_id")
     private UUID linkId;
 
