@@ -63,13 +63,8 @@ public class LinkService {
 
     @Transactional
     public ResponseEntity<Void> redirect(String shortLink) {
-        String original = jdbcTemplate.queryForObject(
-                "UPDATE links SET count = count + 1 " +
-                        "WHERE link = ? " +
-                        "RETURNING original",
-                String.class,
-                shortLink
-        );
+        String original = linkRepository.incrementAndGetOriginal(shortLink)
+                .orElseThrow(() -> new RuntimeException("Ссылка не найдена"));
 
         if (original == null) {
             throw new RuntimeException("Ссылка не найдена");
