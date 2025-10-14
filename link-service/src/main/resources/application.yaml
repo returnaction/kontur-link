@@ -16,6 +16,10 @@ spring:
       ddl-auto: none
     show-sql: true
 
+  data:
+    redis:
+      host: localhost
+      port: 6666
 
   liquibase:
     enabled: true

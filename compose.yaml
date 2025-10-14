@@ -19,3 +19,17 @@ services:
       - "-c"
       - "pg_stat_statements.track=all"
 
+  redis:
+    image: 'redis:7'
+    container_name: "kontur-link-redis"
+    restart: always
+    ports:
+      - '6666:6379'
+    volumes:
+      - ./data/redis:/data
+    command: ["redis-server", "--save", "60", "1", "--loglevel", "warning"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
