@@ -1,5 +1,6 @@
 package com.nikita.linkservice.service;
 
+import com.nikita.linkservice.exception.ShortLinkNotFoundException;
 import com.nikita.linkservice.mapper.LinkMapper;
 import com.nikita.linkservice.model.dto.*;
 import com.nikita.linkservice.model.entity.LinkEntity;
@@ -61,9 +62,9 @@ public class LinkService {
     @Transactional
     public ResponseEntity<Void> redirect(String shortLink) {
         String original = linkRepository.incrementAndGetOriginal(shortLink)
-                .orElseThrow(() -> new RuntimeException("Ссылка не найдена"));
+                .orElseThrow(() -> new ShortLinkNotFoundException("Короткая ссылка не найдена"));
 
-        if (original == null) throw new RuntimeException("Ссылка не найдена");
+        //if (original == null) throw new RuntimeException("Ссылка не найдена");
 
         return ResponseEntity.status(302).location(URI.create(original)).build();
     }
@@ -83,7 +84,7 @@ public class LinkService {
     @Transactional(readOnly = true)
     public ResponseEntity<LinkDto> getStat(String shortLink) {
         LinkStatsView result = linkRepository.findStatsByLink(shortLink)
-                .orElseThrow(() -> new RuntimeException("Ссылка не найдена"));
+                .orElseThrow(() -> new ShortLinkNotFoundException("Короткая ссылка не найдена"));
 
         LinkDto linkDto = linkMapper.toDto(result);
         return new ResponseEntity<>(linkDto, HttpStatus.OK);
