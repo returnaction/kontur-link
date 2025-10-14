@@ -1,5 +1,6 @@
 package com.nikita.linkservice.service;
 
+import com.nikita.linkservice.exception.BadRequestException;
 import com.nikita.linkservice.exception.ShortLinkNotFoundException;
 import com.nikita.linkservice.mapper.LinkMapper;
 import com.nikita.linkservice.model.dto.*;
@@ -34,6 +35,9 @@ public class LinkService {
 
     @Transactional
     public ResponseEntity<LinkResponse> generate(LinkRequest request) {
+
+        String original = request.getOriginal();
+        if(original == null || original.isBlank()) throw new BadRequestException("Поле 'original' не может быть пустым");
 
         Optional<LinkEntity> existing = linkRepository.findByOriginal(request.getOriginal());
         if (existing.isPresent()) {
