@@ -9,6 +9,7 @@ import com.nikita.linkservice.repository.LinkRepository;
 import com.nikita.linkservice.repository.projection.LinkStatsView;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.net.URI;
 import java.security.SecureRandom;
+import java.time.Duration;
 import java.util.Optional;
 
 @Service
@@ -24,13 +26,16 @@ public class LinkService {
     private static final String ALPHABET = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
     private static final int TOKEN_LEN = 10;
     private static final SecureRandom RNG = new SecureRandom();
+    private static final String REDIS_KEY_PREFIX_LINKS = "linksvc:shortlink:";
 
     private final LinkRepository linkRepository;
     private final LinkMapper linkMapper;
+    private final RedisTemplate<String, String> redisTemplate;
 
-    public LinkService(LinkRepository linkRepository, LinkMapper linkMapper) {
+    public LinkService(LinkRepository linkRepository, LinkMapper linkMapper, RedisTemplate<String, String> redisTemplate) {
         this.linkRepository = linkRepository;
         this.linkMapper = linkMapper;
+        this.redisTemplate = redisTemplate;
     }
 
     @Transactional
@@ -65,11 +70,16 @@ public class LinkService {
 
     @Transactional
     public ResponseEntity<Void> redirect(String shortLink) {
-        String original = linkRepository.incrementAndGetOriginal(shortLink)
-                .orElseThrow(() -> new ShortLinkNotFoundException("Короткая ссылка не найдена"));
+        String redisKey = REDIS_KEY_PREFIX_LINKS + shortLink;
+        String original = redisTemplate.opsForValue().get(redisKey);
+        if(original == null){
+            original = linkRepository.findOriginalByLink(shortLink)
+                    .orElseThrow(() -> new ShortLinkNotFoundException(shortLink));
 
-        //if (original == null) throw new RuntimeException("Ссылка не найдена");
+            redisTemplate.opsForValue().set(redisKey, original, Duration.ofHours(1));
+        }
 
+        linkRepository.incrementLinkCount(shortLink);
         return ResponseEntity.status(302).location(URI.create(original)).build();
     }
 

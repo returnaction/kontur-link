@@ -5,8 +5,7 @@ import com.nikita.linkservice.model.entity.LinkEntity;
 import com.nikita.linkservice.repository.projection.LinkStatsView;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.*;
 import org.springframework.data.repository.query.Param;
 
 import java.util.Optional;
@@ -24,6 +23,17 @@ public interface LinkRepository extends JpaRepository<LinkEntity, UUID> {
             SELECT original FROM updated
             """, nativeQuery = true)
     Optional<String> incrementAndGetOriginal(@Param("link") String link);
+
+    @Query(value = "select original from links where link = :link", nativeQuery = true)
+    Optional<String> findOriginalByLink(@Param("link") String link);
+
+    @Modifying
+    @Query(value = """
+            update links
+            set count = count + 1
+            where link = :link
+            """, nativeQuery = true)
+    void incrementLinkCount(@Param("link") String link);
 
     @Query(value = """
             SELECT l.link            AS link,
@@ -51,4 +61,6 @@ public interface LinkRepository extends JpaRepository<LinkEntity, UUID> {
     Optional<LinkStatsView> findStatsByLink(@Param("link") String link);
 
     Optional<LinkEntity> findByOriginal(String original);
+
+
 }
