@@ -42,7 +42,8 @@ public class LinkService {
     public ResponseEntity<LinkResponse> generate(LinkRequest request) {
 
         String original = request.getOriginal();
-        if(original == null || original.isBlank()) throw new BadRequestException("Поле 'original' не может быть пустым");
+        if (original == null || original.isBlank())
+            throw new BadRequestException("Поле 'original' не может быть пустым");
 
         Optional<LinkEntity> existing = linkRepository.findByOriginal(request.getOriginal());
         if (existing.isPresent()) {
@@ -56,6 +57,8 @@ public class LinkService {
                 .count(0L)
                 .build();
         entity = linkRepository.save(entity);
+        String redisKey = REDIS_KEY_PREFIX_LINKS + token;
+        redisTemplate.opsForValue().set(redisKey, original, Duration.ofHours(1));
         return ResponseEntity.ok(new LinkResponse("/l/" + entity.getLink()));
     }
 
@@ -72,15 +75,16 @@ public class LinkService {
     public ResponseEntity<Void> redirect(String shortLink) {
         String redisKey = REDIS_KEY_PREFIX_LINKS + shortLink;
         String original = redisTemplate.opsForValue().get(redisKey);
-        if(original == null){
+        if (original == null) {
             original = linkRepository.findOriginalByLink(shortLink)
                     .orElseThrow(() -> new ShortLinkNotFoundException(shortLink));
 
             redisTemplate.opsForValue().set(redisKey, original, Duration.ofHours(1));
+            System.out.println("Взято из бд");
         }
 
         linkRepository.incrementLinkCount(shortLink);
-        return ResponseEntity.status(302).location(URI.create(original)).build();
+        return ResponseEntity.status(HttpStatus.FOUND).location(URI.create(original)).build();
     }
 
     @Transactional(readOnly = true)
