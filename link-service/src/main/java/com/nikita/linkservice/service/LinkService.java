@@ -107,4 +107,18 @@ public class LinkService {
         LinkDto linkDto = linkMapper.toDto(result);
         return new ResponseEntity<>(linkDto, HttpStatus.OK);
     }
+
+    @Transactional
+    public ResponseEntity<Void> delete(String shortLink) {
+        if(shortLink == null || shortLink.isBlank())
+            throw new  BadRequestException("Не предоставил короткую ссылку");
+
+        LinkEntity entity = linkRepository.findByLink(shortLink)
+                .orElseThrow(() -> new ShortLinkNotFoundException(shortLink));
+
+        linkRepository.delete(entity);
+        redisTemplate.delete(REDIS_KEY_PREFIX_LINKS + shortLink);
+
+        return ResponseEntity.noContent().build();
+    }
 }

@@ -25,6 +25,11 @@ public class LinkController {
         return linkService.redirect(short_link);
     }
 
+    @DeleteMapping("/l/{short_link}")
+    public ResponseEntity<Void> delete(@PathVariable String short_link){
+        return linkService.delete(short_link);
+    }
+
     @GetMapping("/stats")
     public ResponseEntity<Page<LinkDto>> statsAll(
             @RequestParam(defaultValue = "0") int page,
