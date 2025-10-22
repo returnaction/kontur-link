@@ -109,12 +109,12 @@ public class LinkService {
 
 
     @Transactional(readOnly = true)
-    public ResponseEntity<Page<LinkDto>> getStats(int page, int size) {
+    public ResponseEntity<Page<LinkDto>> getStats(int page, int count) {
         if (page < 0) page = 0;
-        if (size <= 0) size = 20;
-        size = Math.min(size, 100);
+        if (count <= 0) count = 20;
+        count = Math.min(count, 100);
 
-        PageRequest pageable = PageRequest.of(page, size);
+        PageRequest pageable = PageRequest.of(page, count);
         Page<LinkStatsView> pageView = linkRepository.findAllStats(pageable);
         Page<LinkDto> pageLinkDto = linkMapper.toDto(pageView);
         return ResponseEntity.ok(pageLinkDto);

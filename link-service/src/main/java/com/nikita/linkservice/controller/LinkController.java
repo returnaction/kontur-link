@@ -38,8 +38,8 @@ public class LinkController {
     @GetMapping("/stats")
     public ResponseEntity<Page<LinkDto>> statsAll(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(name = "count", defaultValue = "20") int size) {
-        return linkService.getStats(page, size);
+            @RequestParam(name = "count", defaultValue = "20") int count) {
+        return linkService.getStats(page, count);
     }
 
     @GetMapping("/stats/l/{short_link}")
