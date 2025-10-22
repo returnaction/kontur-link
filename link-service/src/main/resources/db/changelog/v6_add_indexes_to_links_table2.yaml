@@ -1,0 +1,10 @@
+databaseChangeLog:
+  - changeSet:
+      id: 6
+      author: nikita
+      changes:
+        - sql:
+            sql: |
+              -- поиск по оригинальной ссылке
+              CREATE INDEX IF NOT EXISTS idx_links_original
+              ON links(original);

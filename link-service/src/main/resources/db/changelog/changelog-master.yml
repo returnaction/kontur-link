@@ -9,3 +9,5 @@ databaseChangeLog:
       file: db/changelog/v4_insert_initial_data.yml
   - include:
       file: db/changelog/v5_add_indexes_to_links_table.yml
+  - include:
+      file: db/changelog/v6_add_indexes_to_links_table2.yaml
