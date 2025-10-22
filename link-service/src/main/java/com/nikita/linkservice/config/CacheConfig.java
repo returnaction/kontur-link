@@ -14,7 +14,6 @@ import java.util.Random;
 @EnableCaching
 public class CacheConfig {
 
-    ///  базовая конфигурация кэша
     @Bean
     public RedisCacheConfiguration redisCacheConfiguration() {
         long baseTtlSeconds = 3600L;
@@ -25,7 +24,9 @@ public class CacheConfig {
                 .entryTtl(ttl)
                 .disableCachingNullValues()
                 .computePrefixWith(cacheName -> "linksvc:" + cacheName + ":")
-                .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
-                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()));
+                .serializeKeysWith(
+                        RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
+                .serializeValuesWith(
+                        RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()));
     }
 }

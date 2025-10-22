@@ -26,8 +26,13 @@ public class LinkController {
     }
 
     @DeleteMapping("/l/{short_link}")
-    public ResponseEntity<Void> delete(@PathVariable String short_link){
+    public ResponseEntity<Void> delete(@PathVariable String short_link) {
         return linkService.delete(short_link);
+    }
+
+    @PutMapping("/l/{short_link}")
+    public ResponseEntity<LinkResponse> updateLink(@PathVariable String short_link, @RequestBody LinkRequest request) {
+        return linkService.update(short_link, request);
     }
 
     @GetMapping("/stats")

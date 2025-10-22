@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 public class LinkMapper {
 
     public LinkDto toDto(LinkEntity entity) {
-        if(entity == null) return null;
+        if (entity == null) return null;
         return LinkDto.builder()
                 .original(entity.getOriginal())
                 .link(entity.getLink())
@@ -18,8 +18,8 @@ public class LinkMapper {
                 .build();
     }
 
-    public LinkDto toDto(LinkStatsView view){
-        if(view == null) return null;
+    public LinkDto toDto(LinkStatsView view) {
+        if (view == null) return null;
         return LinkDto.builder()
                 .original(view.getOriginal())
                 .link(view.getLink())
@@ -28,7 +28,7 @@ public class LinkMapper {
                 .build();
     }
 
-    public Page<LinkDto> toDto(Page<LinkStatsView> page){
+    public Page<LinkDto> toDto(Page<LinkStatsView> page) {
         return page.map(this::toDto);
     }
 }

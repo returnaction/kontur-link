@@ -3,6 +3,7 @@ package com.nikita.linkservice.repository;
 
 import com.nikita.linkservice.model.entity.LinkEntity;
 import com.nikita.linkservice.repository.projection.LinkStatsView;
+import jakarta.persistence.LockModeType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.*;
@@ -68,4 +69,10 @@ public interface LinkRepository extends JpaRepository<LinkEntity, UUID> {
                 where l.link = :link
             """, nativeQuery = true)
     Optional<LinkEntity> findByLink(@Param("link") String link);
+
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("select l from LinkEntity l where l.link = :link")
+    Optional<LinkEntity> findByLinkForUpdate(@Param("link") String link);
+
+    boolean existsByLink(String token);
 }
